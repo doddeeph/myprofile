@@ -2,10 +2,34 @@ package repository
 
 import "context"
 
-func (r *Repository) GetTestById(ctx context.Context, input GetTestByIdInput) (output GetTestByIdOutput, err error) {
-	err = r.Db.QueryRowContext(ctx, "SELECT name FROM test WHERE id = $1", input.Id).Scan(&output.Name)
-	if err != nil {
-		return
-	}
-	return
+const createUser = `
+INSERT INTO users (
+    full_name,
+    password,
+    country_code,
+    phone_number
+) VALUES (
+    $1, $2, $3, $4
+) RETURNING id, full_name, password, country_code, phone_number, successful_login, created_at, updated_at
+`
+
+func (r *Repository) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	row := r.Db.QueryRowContext(ctx, createUser,
+		arg.FullName,
+		arg.Password,
+		arg.CountryCode,
+		arg.PhoneNumber,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.FullName,
+		&i.Password,
+		&i.CountryCode,
+		&i.PhoneNumber,
+		&i.SuccessfulLogin,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }

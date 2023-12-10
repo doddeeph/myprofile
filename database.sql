@@ -7,11 +7,15 @@
   In this assignment we will use PostgreSQL as the database.
   */
 
-/** This is test table. Remove this table and replace with your own tables. */
-CREATE TABLE test (
-	id serial PRIMARY KEY,
-	name VARCHAR ( 50 ) UNIQUE NOT NULL,
+CREATE TABLE users (
+	id bigserial PRIMARY KEY,
+	full_name varchar(60) NOT NULL,
+	password varchar(64) NOT NULL,
+	country_code varchar(7) NOT NULL,
+	phone_number varchar(13) UNIQUE NOT NULL,
+	successful_login integer DEFAULT 0,
+	created_at timestamptz NOT NULL DEFAULT (now()),
+	updated_at timestamptz NOT NULL DEFAULT (now())
 );
 
-INSERT INTO test (name) VALUES ('test1');
-INSERT INTO test (name) VALUES ('test2');
+CREATE INDEX ON "users" ("phone_number", "password");
