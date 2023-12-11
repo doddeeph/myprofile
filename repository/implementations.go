@@ -33,3 +33,24 @@ func (r *Repository) CreateUser(ctx context.Context, arg CreateUserParams) (User
 	)
 	return i, err
 }
+
+const getUser = `
+SELECT id, full_name, password, country_code, phone_number, successful_login, created_at, updated_at FROM users
+WHERE id = $1 LIMIT 1
+`
+
+func (r *Repository) GetUser(ctx context.Context, id int64) (User, error) {
+	row := r.Db.QueryRowContext(ctx, getUser, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.FullName,
+		&i.Password,
+		&i.CountryCode,
+		&i.PhoneNumber,
+		&i.SuccessfulLogin,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
