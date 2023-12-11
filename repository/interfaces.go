@@ -9,6 +9,8 @@ import "context"
 type RepositoryInterface interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 
+	GetUserByPhoneNumber(ctx context.Context, phoneNumber string) (User, error)
+
 	GetUser(ctx context.Context, id int64) (User, error)
 
 	UpdateFullNameUser(ctx context.Context, arg UpdateFullNameUserParams) (User, error)

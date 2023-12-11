@@ -40,6 +40,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RegistrationResponse'
+  /users/login:
+    post:
+      operationId: userLogin
+      requestBody:
+        description: Login payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successfully login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Failed login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
   /users/{id}:
     parameters:
       - name: id
@@ -132,6 +155,30 @@ components:
             id:
               type: integer
               format: int64
+        errors:
+          type: array
+    LoginRequest:
+      type: object
+      required: [ phoneNumber, password ]
+      properties:
+        phoneNumber:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      required: [code, data, errors]
+      properties:
+        code:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            token:
+              type: string
         errors:
           type: array
     GetUserResponse:

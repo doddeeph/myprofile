@@ -30,7 +30,7 @@ func (s *Server) UserRegistration(ctx echo.Context) error {
 		FullName:    request.FullName,
 		CountryCode: request.CountryCode,
 		PhoneNumber: request.PhoneNumber,
-		Password:    util.HashAndSaltPassword(request.Password),
+		Password:    util.HashAndSaltPassword(request.Password, util.GenerateSalt()),
 	})
 	if err != nil {
 		errors = append(errors, err.Error())
@@ -42,6 +42,42 @@ func (s *Server) UserRegistration(ctx echo.Context) error {
 		Id *int64 `json:"id,omitempty"`
 	}{Id: &user.ID}
 	return ctx.JSON(http.StatusCreated, generated.RegistrationResponse{
+		Code: string(SUCCESS), Data: data,
+	})
+}
+
+func (s *Server) UserLogin(ctx echo.Context) error {
+	var request generated.LoginRequest
+	var errors []interface{}
+	if err := ctx.Bind(&request); err != nil {
+		errors = append(errors, err.Error())
+		return ctx.JSON(http.StatusBadRequest, generated.LoginResponse{
+			Code: string(ERROR), Errors: errors,
+		})
+	}
+	user, err := s.Repository.GetUserByPhoneNumber(context.Background(), request.PhoneNumber)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, generated.LoginResponse{
+			Code: string(ERROR), Errors: append(errors, err.Error()),
+		})
+	}
+	if !util.PasswordMatch(user.Password, request.Password) {
+		return ctx.JSON(http.StatusBadRequest, generated.LoginResponse{
+			Code: string(ERROR), Errors: append(errors, "Mismatch password"),
+		})
+	}
+	tokenString, err := util.GenerateJWTToken(user.CountryCode + user.PhoneNumber)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, generated.LoginResponse{
+			Code: string(ERROR), Errors: append(errors, err.Error()),
+		})
+	}
+	var ID int64 = 1
+	data := struct {
+		Id    *int64  `json:"id,omitempty"`
+		Token *string `json:"token,omitempty"`
+	}{Id: &ID, Token: &tokenString}
+	return ctx.JSON(http.StatusOK, generated.LoginResponse{
 		Code: string(SUCCESS), Data: data,
 	})
 }

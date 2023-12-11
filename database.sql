@@ -18,4 +18,4 @@ CREATE TABLE users (
 	updated_at timestamptz NOT NULL DEFAULT (now())
 );
 
-CREATE INDEX ON "users" ("phone_number", "password");
+CREATE INDEX ON users (phone_number);

@@ -36,6 +36,27 @@ func (r *Repository) CreateUser(ctx context.Context, arg CreateUserParams) (User
 	return i, err
 }
 
+const getUserByPhoneNumber = `
+SELECT id, full_name, password, country_code, phone_number, successful_login, created_at, updated_at FROM users
+WHERE phone_number = $1 LIMIT 1
+`
+
+func (r *Repository) GetUserByPhoneNumber(ctx context.Context, phoneNumber string) (User, error) {
+	row := r.Db.QueryRowContext(ctx, getUserByPhoneNumber, phoneNumber)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.FullName,
+		&i.Password,
+		&i.CountryCode,
+		&i.PhoneNumber,
+		&i.SuccessfulLogin,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getUser = `
 SELECT id, full_name, password, country_code, phone_number, successful_login, created_at, updated_at FROM users
 WHERE id = $1 LIMIT 1
