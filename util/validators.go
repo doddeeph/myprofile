@@ -33,9 +33,12 @@ func (v *RegistrationRequestValidator) Validate(request generated.RegistrationRe
 		if err1 != nil {
 			errs := err1.(validator.ValidationErrors)
 			if len(errs) != 0 {
-				errors = make([]interface{}, len(errs))
-				for i, fieldErr := range errs {
-					errors[i] = fmt.Sprintf("%s must be at %s %s characters", fieldErr.Field(), fieldErr.Tag(), fieldErr.Param())
+				for _, fieldErr := range errs {
+					errMsg := fmt.Sprintf("%s %s", fieldErr.Field(), fieldErr.Tag())
+					if "required" != fieldErr.Tag() {
+						errMsg = fmt.Sprintf("%s must be at %s %s characters", fieldErr.Field(), fieldErr.Tag(), fieldErr.Param())
+					}
+					errors = append(errors, errMsg)
 				}
 			}
 		}

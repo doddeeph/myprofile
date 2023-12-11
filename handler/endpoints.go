@@ -11,14 +11,15 @@ import (
 
 func (s *Server) UserRegistration(ctx echo.Context) error {
 	var request generated.RegistrationRequest
+	var errors []interface{}
 	if err := ctx.Bind(&request); err != nil {
-		errors := append(make([]interface{}, 1), err.Error())
+		errors = append(errors, err.Error())
 		return ctx.JSON(http.StatusBadRequest, generated.RegistrationResponse{
 			Code: string(ERROR), Errors: &errors,
 		})
 	}
 	regReqValidator := util.NewRegistrationRequestValidator()
-	errors := regReqValidator.Validate(request)
+	errors = regReqValidator.Validate(request)
 	if errors != nil {
 		return ctx.JSON(http.StatusBadRequest, generated.RegistrationResponse{
 			Code: string(ERROR), Errors: &errors,
