@@ -63,3 +63,33 @@ func (mr *MockRepositoryInterfaceMockRecorder) GetUser(ctx, id interface{}) *gom
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockRepositoryInterface)(nil).GetUser), ctx, id)
 }
+
+// UpdateFullNameUser mocks base method.
+func (m *MockRepositoryInterface) UpdateFullNameUser(ctx context.Context, arg UpdateFullNameUserParams) (User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateFullNameUser", ctx, arg)
+	ret0, _ := ret[0].(User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateFullNameUser indicates an expected call of UpdateFullNameUser.
+func (mr *MockRepositoryInterfaceMockRecorder) UpdateFullNameUser(ctx, arg interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateFullNameUser", reflect.TypeOf((*MockRepositoryInterface)(nil).UpdateFullNameUser), ctx, arg)
+}
+
+// UpdatePhoneNumberUser mocks base method.
+func (m *MockRepositoryInterface) UpdatePhoneNumberUser(ctx context.Context, arg UpdatePhoneNumberUserParams) (User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePhoneNumberUser", ctx, arg)
+	ret0, _ := ret[0].(User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdatePhoneNumberUser indicates an expected call of UpdatePhoneNumberUser.
+func (mr *MockRepositoryInterfaceMockRecorder) UpdatePhoneNumberUser(ctx, arg interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePhoneNumberUser", reflect.TypeOf((*MockRepositoryInterface)(nil).UpdatePhoneNumberUser), ctx, arg)
+}

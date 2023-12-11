@@ -48,3 +48,30 @@ func (v *RegistrationRequestValidator) Validate(request generated.RegistrationRe
 	}
 	return
 }
+
+type UpdateRequestValidator struct {
+	validate *validator.Validate
+}
+
+func NewUpdateRequestValidator() *UpdateRequestValidator {
+	return &UpdateRequestValidator{
+		validate: validator.New(),
+	}
+}
+
+func (v *UpdateRequestValidator) Validate(request generated.UpdateUserRequest) (errors []interface{}) {
+	err1 := v.validate.Struct(request)
+	if err1 != nil {
+		errs := err1.(validator.ValidationErrors)
+		if len(errs) != 0 {
+			for _, fieldErr := range errs {
+				errMsg := fmt.Sprintf("%s %s", fieldErr.Field(), fieldErr.Tag())
+				if "required" != fieldErr.Tag() {
+					errMsg = fmt.Sprintf("%s must be at %s %s characters", fieldErr.Field(), fieldErr.Tag(), fieldErr.Param())
+				}
+				errors = append(errors, errMsg)
+			}
+		}
+	}
+	return
+}

@@ -10,4 +10,8 @@ type RepositoryInterface interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 
 	GetUser(ctx context.Context, id int64) (User, error)
+
+	UpdateFullNameUser(ctx context.Context, arg UpdateFullNameUserParams) (User, error)
+
+	UpdatePhoneNumberUser(ctx context.Context, arg UpdatePhoneNumberUserParams) (User, error)
 }
