@@ -39,7 +39,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/RegistrationResponse'
 components:
   schemas:
     RegistrationRequest:
@@ -70,15 +70,15 @@ components:
 #            validate: required,min=6,max=64,regexp=^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])
     RegistrationResponse:
       type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-    ErrorResponse:
-      type: object
       required: [code, message]
       properties:
         code:
           type: string
-        message:
-          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+        errors:
+          type: array
